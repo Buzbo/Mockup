@@ -164,7 +164,6 @@ const NEW_MATCHES = [
 
 // Onboarding steps config
 const OB_STEPS_PRO = [
-  { title: 'Your photo', subtitle: 'Show yourself. First impressions count.', type: 'photo' },
   { title: 'Basic info', subtitle: 'Tell us a bit about yourself.', type: 'basic' },
   { title: 'Intention', subtitle: 'What kind of collaboration are you looking for?', type: 'intention' },
   { title: 'Industries', subtitle: 'Which industries excite you? Select up to 5.', type: 'industries' },
@@ -173,10 +172,10 @@ const OB_STEPS_PRO = [
   { title: 'Interests', subtitle: 'What do you love? Choose up to 5.', type: 'interests' },
   { title: 'Proud Work', subtitle: 'Share 3 key milestones — projects or achievements you are proud of.', type: 'milestones' },
   { title: 'Your Pitch', subtitle: 'One short paragraph — who are you and what do you stand for?', type: 'pitch' },
+  { title: 'Your photo', subtitle: 'Show yourself. First impressions count.', type: 'photo' },
 ];
 
 const OB_STEPS_MGR = [
-  { title: 'Your photo', subtitle: 'Managers with photos get 3x more connections.', type: 'photo' },
   { title: 'Basic info', subtitle: 'Tell us about yourself.', type: 'basic' },
   { title: 'Your company', subtitle: 'What kind of company do you represent?', type: 'company-prefs' },
   { title: 'Industry', subtitle: 'What is your industry focus?', type: 'industries' },
@@ -185,6 +184,7 @@ const OB_STEPS_MGR = [
   { title: 'Team Interests', subtitle: 'What does your team love?', type: 'interests' },
   { title: 'Team Goals', subtitle: 'Share 3 current priorities for your team or company.', type: 'team-goals' },
   { title: 'Your Pitch', subtitle: 'What makes working with you special?', type: 'pitch' },
+  { title: 'Your photo', subtitle: 'Managers with photos get 3x more connections.', type: 'photo' },
 ];
 
 // ═══════════════════════════════════════════
