@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Buzbo — Connect with passion</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ═══════════════════════════════════
+       SPLASH SCREEN
+  ═══════════════════════════════════ -->
+  <div id="screen-splash" class="screen active">
+    <div class="splash-logo">
+      <div class="splash-logo-icon">ƀ</div>
+      <div class="splash-wordmark">buzbo</div>
+      <div class="splash-tagline">People to follow their passion<br>and get hired for who they are</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       ROLE SELECTION
+  ═══════════════════════════════════ -->
+  <div id="screen-role" class="screen">
+    <div class="role-header">
+      <div class="role-logo">ƀ buzbo</div>
+      <div class="role-title">Welcome — who are you?</div>
+      <div class="role-subtitle">Choose how you want to use Buzbo.<br>You can always switch later.</div>
+    </div>
+    <div class="role-cards">
+      <div class="role-card" id="role-pro" onclick="selectRole('professional')">
+        <div class="role-icon pro">🙋</div>
+        <div>
+          <div class="role-card-title">I'm open to work</div>
+          <div class="role-card-desc">You're a professional looking to connect with managers and teams that match your passions and values.</div>
+        </div>
+      </div>
+      <div class="role-card" id="role-mgr" onclick="selectRole('manager')">
+        <div class="role-icon mgr">🏢</div>
+        <div>
+          <div class="role-card-title">I'm looking for talent</div>
+          <div class="role-card-desc">You're a business manager seeking professionals who align with your team culture and goals.</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:32px; width:100%; max-width:340px;">
+      <button class="btn btn-primary" id="role-next-btn" onclick="goToOnboarding()" style="opacity:0.4;pointer-events:none;">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       ONBOARDING FLOW
+  ═══════════════════════════════════ -->
+  <div id="screen-onboarding" class="screen">
+    <div class="onboarding-inner">
+
+      <!-- Header -->
+      <div class="onboarding-header">
+        <div class="onboarding-progress" id="onboarding-progress">
+          <!-- dots injected by JS -->
+        </div>
+        <div class="onboarding-title" id="onboarding-title">Your photo</div>
+        <div class="onboarding-subtitle" id="onboarding-subtitle">Show yourself. First impressions count.</div>
+      </div>
+
+      <!-- Body (steps rendered by JS) -->
+      <div class="onboarding-body" id="onboarding-body">
+      </div>
+
+      <!-- Footer -->
+      <div class="onboarding-footer">
+        <div style="display:flex;gap:12px;align-items:center;">
+          <button class="btn btn-ghost btn-sm" id="ob-back-btn" onclick="obPrev()" style="width:80px;">← Back</button>
+          <button class="btn btn-primary" id="ob-next-btn" onclick="obNext()">Continue →</button>
+        </div>
+        <div style="text-align:center;margin-top:12px;">
+          <button class="btn-ghost" onclick="obSkip()" style="font-size:12px;color:var(--text-light);">Skip this step</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       MAIN APP — CONNECTING TAB
+  ═══════════════════════════════════ -->
+  <div id="screen-connecting" class="screen">
+    <div class="connecting-header">
+      <span class="connecting-logo">ƀ buzbo</span>
+      <div class="connecting-filters">
+        <button class="filter-btn" onclick="showFilters()">⚙️</button>
+        <button class="filter-btn" onclick="showNotifs()">🔔</button>
+      </div>
+    </div>
+
+    <!-- Card stack -->
+    <div class="card-stack-area" style="flex:1;">
+      <div class="card-stack" id="card-stack">
+        <!-- Cards injected by JS -->
+      </div>
+    </div>
+
+    <!-- Swipe action buttons -->
+    <div class="swipe-actions">
+      <button class="swipe-btn" onclick="doSwipe('down')" id="btn-buzdown">
+        <div class="swipe-btn-circle down" style="font-size: 24px;">❌</div>
+        <span class="swipe-btn-label">Skip</span>
+      </button>
+      <button class="swipe-btn" onclick="addToFavorite()">
+        <div class="swipe-btn-circle super" style="font-size: 24px;">⭐</div>
+        <span class="swipe-btn-label" style="color:var(--orange);">Favorite</span>
+      </button>
+      <button class="swipe-btn" onclick="doSwipe('up')" id="btn-buzup">
+        <div class="swipe-btn-circle up" style="font-size: 24px;">💬</div>
+        <span class="swipe-btn-label" style="color:var(--maroon);">Connect</span>
+      </button>
+    </div>
+
+    <!-- Tab bar -->
+    <div class="tab-bar">
+      <div class="tab-item active" id="tab-connecting" onclick="showTab('connecting')">
+        <div class="tab-icon">🔗</div>
+        <span class="tab-label">Connect</span>
+      </div>
+      <div class="tab-item" id="tab-profile" onclick="showTab('profile')">
+        <div class="tab-icon">👤</div>
+        <span class="tab-label">Profile</span>
+      </div>
+      <div class="tab-item" id="tab-chat" onclick="showTab('chat')">
+        <div class="tab-icon">💬<span class="badge">2</span></div>
+        <span class="tab-label">Chat</span>
+      </div>
+      <div class="tab-item" id="tab-premium" onclick="showTab('premium')">
+        <div class="tab-icon">⭐</div>
+        <span class="tab-label">Premium</span>
+      </div>
+    </div>
+
+    <!-- Match overlay -->
+    <div class="match-overlay" id="match-overlay">
+      <canvas class="match-confetti" id="confetti-canvas" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
+      <div class="match-title">It's a</div>
+      <div class="match-headline">BuzMatch! 🎉</div>
+      <div class="match-sub">You and <span id="match-name">Sarah</span> both BuzZed each other</div>
+      <div class="match-avatars">
+        <img class="match-avatar" id="match-avatar-me" src="" alt="Me">
+        <div class="match-heart">💝</div>
+        <img class="match-avatar" id="match-avatar-them" src="" alt="Them">
+      </div>
+      <button class="match-btn-primary" onclick="openMatchChat()">💬 Send a Message</button>
+      <button class="match-btn-ghost" onclick="closeMatch()">Keep Connecting</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       PROFILE TAB
+  ═══════════════════════════════════ -->
+  <div id="screen-profile" class="screen">
+
+    <div class="profile-header">
+      <span class="profile-header-title">My Profile</span>
+      <button class="edit-toggle-btn" id="edit-toggle-btn" onclick="toggleEditMode()">✏️ Edit</button>
+    </div>
+
+    <div class="scroll-area">
+
+      <!-- View mode -->
+      <div id="profile-view-mode">
+
+        <!-- 1. FIXED: Photo + Name + Age + Location + Role -->
+        <div class="profile-photo-section">
+          <img id="profile-photo-display" src="https://i.pravatar.cc/400?img=47" alt="Profile photo">
+          <div class="profile-photo-overlay"></div>
+          <div class="profile-name-overlay">
+            <div class="profile-name-big">Sophie K. &nbsp;·&nbsp; 29 &nbsp;·&nbsp; Amsterdam</div>
+            <div class="profile-name-sub">🙋 Open to work&nbsp;&nbsp;|&nbsp;&nbsp; Female</div>
+          </div>
+        </div>
+
+        <div class="profile-body">
+
+          <!-- 2. OPTIONAL: Intention — scannable icon+text rows from Excel tab 05 -->
+          <div class="profile-section">
+            <div class="section-label">Intention</div>
+            <div class="intent-pills">
+              <span class="intent-pill"><span class="intent-pill-icon">💼</span> Fulltime (payroll)</span>
+              <span class="intent-pill"><span class="intent-pill-icon">🚀</span> More impact</span>
+              <span class="intent-pill"><span class="intent-pill-icon">🔄</span> Hybrid</span>
+              <span class="intent-pill"><span class="intent-pill-icon">🛒</span> Retail / FMCG</span>
+              <span class="intent-pill"><span class="intent-pill-icon">🌱</span> Social Impact / NGO</span>
+              <span class="intent-pill"><span class="intent-pill-icon">♻️</span> Sustainability</span>
+              <span class="intent-pill"><span class="intent-pill-icon">🛍️</span> E-commerce</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- 3. Proud Work — 3-column grid -->
+          <div class="section-label" style="margin-bottom:12px;">Proud Work</div>
+          <div class="proud-work-grid">
+            <div class="proud-work-item">
+              <div class="pw-company">Plant BV</div>
+              <div class="pw-role">Product Manager</div>
+              <div class="pw-desc">New packaging line launched, +25% revenue in first year.</div>
+              <div class="pw-date">Nov '21 – Jan '24</div>
+            </div>
+            <div class="proud-work-item">
+              <div class="pw-company">Logistics BV</div>
+              <div class="pw-role">Process Manager</div>
+              <div class="pw-desc">Led cross-dept audit project — zero findings, on time.</div>
+              <div class="pw-date">2020</div>
+            </div>
+            <div class="proud-work-item">
+              <div class="pw-company">Amsterdam Marathon</div>
+              <div class="pw-role">Personal</div>
+              <div class="pw-desc">Finished first marathon and raised €1k+ for charity.</div>
+              <div class="pw-date">Oct 2022</div>
+            </div>
+          </div>
+
+          <!-- Prompt 1 (Interleaved) -->
+          <div class="prompt-item" style="margin-top:16px; margin-bottom:24px;">
+            <div class="prompt-q">My superpower at work is…</div>
+            <div class="prompt-a">Bringing structure to chaos — I make complex projects feel manageable and people feel heard.</div>
+          </div>
+
+          <!-- 4. REQUIRED: Values block -->
+          <div class="profile-block values-block">
+            <div class="profile-block-title">Values</div>
+            <div class="profile-block-tags">
+              <span class="block-tag">🎯 Ambition</span>
+              <span class="block-tag">🤝 Collaboration</span>
+              <span class="block-tag">💡 Innovation</span>
+              <span class="block-tag">❤️ Empathy</span>
+            </div>
+          </div>
+
+          <!-- 5. REQUIRED: Work Style block (beige) -->
+          <div class="profile-block work-block">
+            <div class="profile-block-title">Work Style</div>
+            <div class="profile-block-tags">
+              <span class="block-tag">🔄 Hybrid</span>
+              <span class="block-tag">👥 Collaborative</span>
+              <span class="block-tag">⚡ Fast-paced</span>
+              <span class="block-tag">🎯 Result-driven</span>
+            </div>
+          </div>
+
+          <!-- 6. OPTIONAL: Interests — pill tags -->
+          <div class="profile-section" style="margin-top:16px; margin-bottom: 24px;">
+            <div class="section-label">Interests</div>
+            <div class="profile-block-tags" style="display:flex;flex-wrap:wrap;gap:8px;">
+              <span style="padding:6px 14px;border-radius:100px;background:#FEF0E0;color:#C06020;font-size:12px;font-weight:500;">🏃 Running</span>
+              <span style="padding:6px 14px;border-radius:100px;background:#FEF0E0;color:#C06020;font-size:12px;font-weight:500;">📚 Reading</span>
+              <span style="padding:6px 14px;border-radius:100px;background:#FEF0E0;color:#C06020;font-size:12px;font-weight:500;">✈️ Travel</span>
+              <span style="padding:6px 14px;border-radius:100px;background:#FEF0E0;color:#C06020;font-size:12px;font-weight:500;">🍷 Wine &amp; dining</span>
+              <span style="padding:6px 14px;border-radius:100px;background:#FEF0E0;color:#C06020;font-size:12px;font-weight:500;">🎨 Art &amp; design</span>
+            </div>
+          </div>
+
+          <!-- Prompt 2 (Bottom) -->
+          <div class="prompt-item">
+            <div class="prompt-q">I am looking for a team that…</div>
+            <div class="prompt-a">Has a clear purpose and is not afraid to challenge the status quo.</div>
+          </div>
+
+          <div style="height:24px;"></div>
+
+        </div>
+      </div>
+
+
+
+      <!-- Edit mode -->
+      <div id="profile-edit-mode" class="hidden">
+        <!-- Bumble Style Header -->
+        <div class="edit-header">
+          <div class="edit-close" onclick="cancelEdit()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </div>
+          <div class="edit-title">My Profile</div>
+          <div style="width:24px;"></div>
+        </div>
+
+        <div class="edit-body">
+          <div class="edit-intro">You've chosen all 5. Nice!</div>
+          
+          <div class="edit-toggle-row">
+            <div class="toggle-switch">
+              <input type="checkbox" id="profile-toggle" checked>
+              <label for="profile-toggle" class="toggle-slider"></label>
+            </div>
+            <span>Shown on my profile</span>
+          </div>
+
+          <div class="bumble-divider"></div>
+
+          <!-- Photo -->
+          <div class="bumble-group">
+            <div class="bumble-label">Photo</div>
+            <div class="photo-upload" onclick="changePhoto()" style="margin-top:12px;">
+              <img class="photo-preview" src="https://i.pravatar.cc/400?img=47" alt="Photo">
+            </div>
+          </div>
+
+          <div class="bumble-divider"></div>
+
+          <!-- Basic Info -->
+          <div class="bumble-group">
+            <div class="bumble-label">Basic Info</div>
+            <div class="form-group" style="margin-top:12px;">
+              <input class="bumble-input" type="text" value="Sophie" placeholder="First Name" id="edit-name">
+            </div>
+            <div class="form-group">
+              <input class="bumble-input" type="number" value="29" placeholder="Age" id="edit-age">
+            </div>
+            <div class="form-group">
+              <input class="bumble-input" type="text" value="Amsterdam" placeholder="City" id="edit-city">
+            </div>
+          </div>
+
+          <div class="bumble-divider"></div>
+
+          <!-- Tags: Intention / Job Type -->
+          <div class="bumble-group">
+            <div class="bumble-label">Intention</div>
+            <div class="bumble-tags">
+              <div class="bumble-pill selected" onclick="toggleTag(this)">💼 Fulltime (payroll)</div>
+              <div class="bumble-pill" onclick="toggleTag(this)">🔧 Freelance</div>
+              <div class="bumble-pill selected" onclick="toggleTag(this)">🚀 More impact</div>
+              <div class="bumble-pill" onclick="toggleTag(this)">🌟 Promotion</div>
+            </div>
+          </div>
+
+          <div class="bumble-divider"></div>
+
+          <!-- Tags: Industry -->
+          <div class="bumble-group">
+            <div class="bumble-label">Industry</div>
+            <div class="bumble-tags">
+              <div class="bumble-pill selected" onclick="toggleTag(this)">📦 Packaging</div>
+              <div class="bumble-pill selected" onclick="toggleTag(this)">🌱 Social Impact</div>
+              <div class="bumble-pill selected" onclick="toggleTag(this)">🛒 E-commerce</div>
+              <div class="bumble-pill" onclick="toggleTag(this)">💰 FinTech</div>
+              <div class="bumble-pill" onclick="toggleTag(this)">☁️ SaaS</div>
+              <div class="bumble-pill" onclick="toggleTag(this)">🛍️ Retail</div>
+            </div>
+          </div>
+
+          <div class="bumble-divider"></div>
+
+          <!-- Tags: Values -->
+          <div class="bumble-group">
+            <div class="bumble-label">Values</div>
+            <div class="bumble-tags">
+              <div class="bumble-pill selected" onclick="toggleTag(this)">🎯 Ambition</div>
+              <div class="bumble-pill" onclick="toggleTag(this)">❤️ Empathy</div>
+              <div class="bumble-pill selected" onclick="toggleTag(this)">💡 Innovation</div>
+              <div class="bumble-pill" onclick="toggleTag(this)">🤝 Collaboration</div>
+            </div>
+          </div>
+
+          <div class="bumble-divider"></div>
+
+          <!-- Tags: Interests -->
+          <div class="bumble-group">
+            <div class="bumble-label">Interests</div>
+            <div class="bumble-tags">
+              <div class="bumble-pill selected" onclick="toggleTag(this)">🏃 Running</div>
+              <div class="bumble-pill selected" onclick="toggleTag(this)">🍷 Wine</div>
+              <div class="bumble-pill selected" onclick="toggleTag(this)">✈️ Travel</div>
+              <div class="bumble-pill" onclick="toggleTag(this)">🎶 Music</div>
+              <div class="bumble-pill" onclick="toggleTag(this)">📚 Reading</div>
+            </div>
+          </div>
+
+          <div class="bumble-divider"></div>
+
+          <!-- Pitch & Prompts -->
+          <div class="bumble-group">
+            <div class="bumble-label">Prompts</div>
+            <div class="bumble-subtext">Make your personality stand out from the crowd.</div>
+            
+            <div class="bumble-prompt-card">
+              <div class="bumble-prompt-q">My superpower at work is… <span style="float:right;">›</span></div>
+              <div class="bumble-prompt-a">Bringing structure to chaos — I make complex projects feel manageable and people feel heard.</div>
+              <div class="bumble-prompt-feedback">
+                <div style="font-size:16px; margin-bottom:4px;">💡 <b>Great answer!</b></div>
+                <div style="color:var(--text-mid); font-size:14px; margin-bottom:12px;">This has that spark that gets people talking.</div>
+                <div style="font-size:18px;">👍 👎</div>
+              </div>
+            </div>
+
+            <div class="bumble-prompt-card">
+              <div class="bumble-prompt-q">I am looking for a team that… <span style="float:right;">›</span></div>
+              <div class="bumble-prompt-a" style="color:var(--text-mid);">Tap to answer</div>
+            </div>
+          </div>
+
+          <div style="margin: 32px 0;">
+            <button class="btn btn-primary" onclick="saveProfile()" style="width:100%; border-radius:100px;">Save Profile</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Tab bar -->
+    <div class="tab-bar">
+      <div class="tab-item" id="tab-connecting-p" onclick="showTab('connecting')">
+        <div class="tab-icon">🔗</div>
+        <span class="tab-label">Connect</span>
+      </div>
+      <div class="tab-item active" id="tab-profile-p" onclick="showTab('profile')">
+        <div class="tab-icon">👤</div>
+        <span class="tab-label">Profile</span>
+      </div>
+      <div class="tab-item" id="tab-chat-p" onclick="showTab('chat')">
+        <div class="tab-icon">💬<span class="badge">2</span></div>
+        <span class="tab-label">Chat</span>
+      </div>
+      <div class="tab-item" id="tab-premium-p" onclick="showTab('premium')">
+        <div class="tab-icon">⭐</div>
+        <span class="tab-label">Premium</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       CHAT TAB
+  ═══════════════════════════════════ -->
+  <div id="screen-chat" class="screen">
+
+    <div class="chat-header">
+      <div class="chat-header-title">Chat</div>
+      <div class="chat-header-sub">Your BuzMatches</div>
+    </div>
+
+    <div class="scroll-area">
+      <!-- New matches row -->
+      <div class="matches-row">
+        <div class="matches-row-label">New matches</div>
+        <div class="matches-avatars" id="new-matches-row">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+      <!-- Chat list -->
+      <div class="chat-list" id="chat-list">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <!-- Tab bar -->
+    <div class="tab-bar">
+      <div class="tab-item" id="tab-connecting-c" onclick="showTab('connecting')">
+        <div class="tab-icon">🔗</div>
+        <span class="tab-label">Connect</span>
+      </div>
+      <div class="tab-item" id="tab-profile-c" onclick="showTab('profile')">
+        <div class="tab-icon">👤</div>
+        <span class="tab-label">Profile</span>
+      </div>
+      <div class="tab-item active" id="tab-chat-c" onclick="showTab('chat')">
+        <div class="tab-icon">💬</div>
+        <span class="tab-label">Chat</span>
+      </div>
+      <div class="tab-item" id="tab-premium-c" onclick="showTab('premium')">
+        <div class="tab-icon">⭐</div>
+        <span class="tab-label">Premium</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       CONVERSATION SCREEN
+  ═══════════════════════════════════ -->
+  <div id="screen-conversation" class="screen">
+
+    <div class="convo-header">
+      <button class="convo-back" onclick="closeConversation()">←</button>
+      <img class="convo-avatar" id="convo-avatar" src="" alt="">
+      <div class="convo-info">
+        <div class="convo-name" id="convo-name">Name</div>
+        <div class="convo-status">🟢 Active now</div>
+      </div>
+      <button class="convo-menu">👤</button>
+    </div>
+
+    <div class="convo-messages" id="convo-messages">
+      <!-- Messages injected by JS -->
+    </div>
+
+    <div class="convo-input-area">
+      <textarea class="convo-input" id="convo-input" placeholder="Write a message…" rows="1" oninput="autoResize(this)"></textarea>
+      <button class="convo-send" onclick="sendMessage()">↑</button>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════
+       PREMIUM SCREEN
+  ═══════════════════════════════════ -->
+  <div id="screen-premium" class="screen">
+
+    <div class="scroll-area" style="padding-bottom:var(--tab-bar-height)">
+
+      <div class="premium-header">
+        <div class="premium-badge">⭐ Buzbo Boost</div>
+        <div class="premium-title">Supercharge your connections</div>
+        <div class="premium-subtitle">Get more matches, more visibility,<br>and connect faster with the right people.</div>
+      </div>
+
+      <div class="premium-body">
+
+        <div style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--maroon);margin-bottom:16px;">Memberships</div>
+
+        <div class="pricing-cards" style="flex-direction: column; gap: 16px;">
+          <!-- Luxe -->
+          <div class="pricing-card" style="text-align: left; padding: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <div class="pricing-period" style="margin-bottom: 0; font-size: 16px; color: var(--text-dark);">Luxe Membership</div>
+              <div class="pricing-price" style="font-size: 20px;">€8.99<span style="font-size: 11px; color: var(--text-mid); font-family: var(--font-body); font-weight: normal;">/week</span></div>
+            </div>
+            <ul style="font-size: 13px; color: var(--text-mid); line-height: 1.6; padding-left: 18px; margin-bottom: 16px; margin-top: 0;">
+              <li>See who liked you</li>
+              <li>Unlimited likes</li>
+              <li>SuperUPS</li>
+            </ul>
+            <button class="pricing-cta">Get Luxe</button>
+          </div>
+
+          <!-- Premium -->
+          <div class="pricing-card popular" style="text-align: left; padding: 24px;">
+            <div class="pricing-popular-badge">🔥 Most popular</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <div class="pricing-period" style="margin-bottom: 0; font-size: 16px; color: var(--maroon);">Premium Membership</div>
+              <div class="pricing-price" style="font-size: 20px;">€18.99<span style="font-size: 11px; color: var(--text-mid); font-family: var(--font-body); font-weight: normal;">/week</span></div>
+            </div>
+            <ul style="font-size: 13px; color: var(--text-mid); line-height: 1.6; padding-left: 18px; margin-bottom: 16px; margin-top: 0;">
+              <li>Incognito feature</li>
+              <li>1 rise star of the week</li>
+              <li>More likes in for you</li>
+              <li>Extra info of company</li>
+              <li>Global connections</li>
+            </ul>
+            <button class="pricing-cta">Get Premium</button>
+          </div>
+        </div>
+
+        <div style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--maroon);margin-top:24px;margin-bottom:16px;">Pay as you use</div>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+          <div class="feature-item" style="margin-bottom: 0; align-items: center; padding: 12px 16px;">
+            <div class="feature-icon" style="font-size: 18px; width: 36px; height: 36px;">🚀</div>
+            <div style="flex: 1;">
+              <div class="feature-title" style="margin-bottom: 0; font-size: 14px;">Rise your profile</div>
+            </div>
+            <div style="font-weight: 700; color: var(--maroon);">€3.65</div>
+          </div>
+          <div class="feature-item" style="margin-bottom: 0; align-items: center; padding: 12px 16px;">
+            <div class="feature-icon" style="font-size: 18px; width: 36px; height: 36px;">⚡</div>
+            <div style="flex: 1;">
+              <div class="feature-title" style="margin-bottom: 0; font-size: 14px;">SuperUP</div>
+            </div>
+            <div style="font-weight: 700; color: var(--maroon);">€1.90</div>
+          </div>
+          <div class="feature-item" style="margin-bottom: 0; align-items: center; padding: 12px 16px;">
+            <div class="feature-icon" style="font-size: 18px; width: 36px; height: 36px;">🔗</div>
+            <div style="flex: 1;">
+              <div class="feature-title" style="margin-bottom: 0; font-size: 14px;">Boost connection</div>
+            </div>
+            <div style="font-weight: 700; color: var(--maroon);">€4.50</div>
+          </div>
+        </div>
+
+        <div style="text-align:center;font-size:11px;color:var(--text-light);margin-top:8px;">Secure payment · No hidden fees</div>
+
+        <div style="height:16px;"></div>
+
+      </div>
+    </div>
+
+    <!-- Tab bar -->
+    <div class="tab-bar">
+      <div class="tab-item" id="tab-connecting-pr" onclick="showTab('connecting')">
+        <div class="tab-icon">🔗</div>
+        <span class="tab-label">Connect</span>
+      </div>
+      <div class="tab-item" id="tab-profile-pr" onclick="showTab('profile')">
+        <div class="tab-icon">👤</div>
+        <span class="tab-label">Profile</span>
+      </div>
+      <div class="tab-item" id="tab-chat-pr" onclick="showTab('chat')">
+        <div class="tab-icon">💬<span class="badge">2</span></div>
+        <span class="tab-label">Chat</span>
+      </div>
+      <div class="tab-item active" id="tab-premium-pr" onclick="showTab('premium')">
+        <div class="tab-icon">⭐</div>
+        <span class="tab-label">Premium</span>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /#app -->
+
+<script src="app.js"></script>
+</body>
+</html>
